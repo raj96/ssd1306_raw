@@ -5,7 +5,8 @@
 I2C::I2C(uint sda, uint scl, uint slave_addr):
   sda(sda),
   scl(scl),
-  addr(slave_addr) {
+  addr(slave_addr),
+  busClaimed(false) {
     pinMode(scl, OUTPUT);
     digitalWrite(scl, HIGH);
 }
@@ -19,11 +20,17 @@ void I2C::sendStart() {
   digitalWrite(this->sda, LOW);
 }
 
-bool I2C::ClaimBus() {
-  this->sendStart();
-  this->SendByte(addr);
+bool I2C::ClaimBus(I2CClaimMode claimMode) {
+  Serial.printf("claimMode: %d\n", claimMode);
+  Serial.printf("address: 0x%x\n", this->addr);
+  Serial.printf("con address: 0x%x\n", this->addr | claimMode);
   
-  return this->recvBit();
+  this->sendStart();
+  this->SendByte(this->addr | claimMode);
+
+  this->busClaimed = this->recvBit() == I2C_ACK;
+  
+  return this->busClaimed;
 }
 
 bool I2C::SendByte(char data) {
@@ -35,7 +42,7 @@ bool I2C::SendByte(char data) {
     
   }
 
-  return this->recvBit();
+  return this->recvBit() == I2C_ACK;
 }
 
 bool I2C::recvBit() {
@@ -58,7 +65,7 @@ void I2C::ReleaseClaim() {
   pinMode(this->scl, OUTPUT);
   pinMode(this->sda, OUTPUT);
 
-  digitalWrite(sda, LOW);
-  digitalWrite(scl, HIGH);
-  digitalWrite(sda, HIGH);
+  digitalWrite(this->sda, LOW);
+  digitalWrite(this->scl, HIGH);
+  digitalWrite(this->sda, HIGH);
 }
