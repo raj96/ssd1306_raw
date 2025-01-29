@@ -4,6 +4,7 @@
 #include "i2c.h"
 
 #define CONTROL_BYTE(co, dc)  ((co << 1 | dc) << 6)
+#define VRAM_SIZE 128*8
 
 class SSD1306 {
   public:
@@ -16,16 +17,21 @@ class SSD1306 {
     void SetContrast(uint contrast);
     void InvertDisplay();
     void ClearScreen();
-    void Line(int x1, int y1, int x2, int y2);
-    void Rect(int x1, int y1, int x2, int y2);
+    
+    void Point(uint x, uint y);
+    void Line(uint x1, uint y1, uint x2, uint y2);
+    void Rect(uint x1, uint y1, uint x2, uint y2);
+    void WhiteNoise();
+
+    void Show();
 
     void Test();
   private:
     I2C i2c;
     bool busClaimed;
-    char gddram[128][8];
+    uint8_t vram[VRAM_SIZE];
 
-    void updateVram(int x, int y);
+    void updateVram(uint x, uint y, int value);
 };
 
 #endif

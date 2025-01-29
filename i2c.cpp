@@ -21,10 +21,6 @@ void I2C::sendStart() {
 }
 
 bool I2C::ClaimBus(I2CClaimMode claimMode) {
-  Serial.printf("claimMode: %d\n", claimMode);
-  Serial.printf("address: 0x%x\n", this->addr);
-  Serial.printf("con address: 0x%x\n", this->addr | claimMode);
-  
   this->sendStart();
   this->SendByte(this->addr | claimMode);
 
@@ -33,7 +29,7 @@ bool I2C::ClaimBus(I2CClaimMode claimMode) {
   return this->busClaimed;
 }
 
-bool I2C::SendByte(char data) {
+bool I2C::SendByte(uint8_t data) {
   pinMode(this->scl, OUTPUT);
   pinMode(this->sda, OUTPUT);
 

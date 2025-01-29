@@ -22,14 +22,20 @@ void setup() {
     Serial.println("Could not initialize screen");
   }
   // screen.InvertDisplay();
-  screen.SetContrast(0x05);
+  screen.SetContrast(0xff / 2);
 
   screen.ClearScreen();
-  screen.Test();
+  // screen.WhiteNoise();
+  screen.Point(128/2, 64/2);
+  screen.Line(10, 10, 64, 15);
+  screen.Rect(127, 63, 70, 31);
+  screen.Show();
+  while(1) { delay(100); };
 }
 
 void loop() {
-  delay(5000);
+
+  delay(1500);
 }
 
 

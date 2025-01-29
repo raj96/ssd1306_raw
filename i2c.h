@@ -17,7 +17,7 @@ class I2C {
     I2C(uint sda, uint scl, uint slave_addr);
 
     bool ClaimBus(I2CClaimMode claimMode);
-    bool SendByte(char data);
+    bool SendByte(uint8_t data);
     char RecvByte();
     void ReleaseClaim();
   private:
